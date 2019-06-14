@@ -1,0 +1,35 @@
+h2{
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+body{
+    background-color: darkolivegreen;
+}
+span{
+    color: #fff;
+    text-shadow: #000 0px 0px 2px;
+    -webkit-font-smoothing: antialiased;
+}
+.border{
+    border: 1px solid white;
+    border-radius: 5px;
+}
+.register h3{
+    border: 1px solid black;
+    background-color: yellow;
+    border-radius: 5px;
+    width:120px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0px ;
+    margin-bottom: 5px;
+    font-size: 19px;
+    float : left;
+}
+p.errorMes{
+    color:rgb(255, 0, 0);
+    font-weight: bold;
+    font-size: 15px;
+    float:left;
+}

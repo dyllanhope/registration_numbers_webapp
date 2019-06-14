@@ -1,10 +1,10 @@
 'use strict';
-
 const express = require('express');
 const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
 const flash = require('express-flash');
 const session = require('express-session');
+const RegNumManager = require('./registration_number_manager');
 
 const app = express();
 
@@ -48,7 +48,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
-    res.send('Mom I made it!!');
+    res.render('index');
 });
 
 const PORT = process.env.PORT || 3012;
