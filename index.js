@@ -27,7 +27,7 @@ const pool = new Pool({
 const regNumManager = RegNumManager(pool);
 
 app.use(session({
-    secret: 'secret message',
+    secret: 'yikes',
     resave: false,
     saveUninitialized: true
 }));
