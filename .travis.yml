@@ -10,6 +10,8 @@ before_script:
   - psql -c 'create database  reg_num_tests;' -U postgres
   - psql -U postgres -d reg_num_tests -a -f tables.sql
 
+after_success: npm run coverage
+
 addons:
     apt:
     packages:
