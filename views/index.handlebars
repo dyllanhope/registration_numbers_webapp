@@ -8,27 +8,25 @@
     </div>
     <div class="row">
         <div class="col-4"></div>
-        <div class="col-4">
-            <span>eg.(CY 563 264)</span>
-            <input style="float:right" type="text" class="regFieldText">
-        </div>
-        <div class="col-4">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <p class="errorMes" id="error" style="margin: 0px"></p>
+        <div class="col-4 center">
+            <form action="/regdata" method="POST">
+                <span>eg.(CY 563 264)</span>
+                <input style="float:right" type="text" name="regFieldText">
+                <button type="submit" class="addBtn">Add registration number</button>
+                <h5 style="color:red; margin:0px">{{messages.error}}</h5>
+            </form>
         </div>
     </div>
     <div class="row">
         <div class="col-4"></div>
         <div class="col-4">
-            <button style="float:left" class="clearBtn">Clear List</button>
-            <button style="float:right" class="addBtn">Add</button>
+            <form action="/clear" method="POST">
+                <button type="submit" class="clearBtn">Clear List</button>
+            </form>
         </div>
         <div class="col-4"></div>
     </div>
-    <div class="row">
+    {{!-- <div class="row">
         <div class="col-4"></div>
         <div class="col-4">
             <select id="item1">
@@ -36,12 +34,13 @@
             </select>
         </div>
         <div class="col-4"></div>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div id="parentElementRegHeadings" class="register">
-                <div id="childElement"></div>
-            </div>
+    </div> --}}
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6 register">
+            {{#reg_num_list}}
+            <h3>{{registration}}</h3>
+            {{/reg_num_list}}
         </div>
+        <div class="col-3"></div>
     </div>
-</div>

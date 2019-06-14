@@ -4,7 +4,7 @@ create table towns(
     loc_key text not null
 );
 
-create table regNums (
+create table reg_num_list (
 	id serial not null primary key,
     registration text not null
 );

@@ -3,12 +3,15 @@ h2{
     margin-top: 5px;
 }
 body{
-    background-color: darkolivegreen;
+    background-color: coral;
 }
 span{
     color: #fff;
     text-shadow: #000 0px 0px 2px;
     -webkit-font-smoothing: antialiased;
+}
+button{
+    margin:5px;
 }
 .border{
     border: 1px solid white;
@@ -23,7 +26,8 @@ span{
     margin-left: auto;
     margin-right: auto;
     margin-top: 0px ;
-    margin-bottom: 5px;
+    margin-right: 2px;
+    margin-bottom: 2px;
     font-size: 19px;
     float : left;
 }
