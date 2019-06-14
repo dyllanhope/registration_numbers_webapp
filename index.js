@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const flash = require('express-flash');
 const session = require('express-session');
 const RegNumManager = require('./registration_number_manager');
+const RegNumListRoutes = require('./routes/reg-num-list-routes');
 
 const app = express();
 
@@ -25,6 +26,7 @@ const pool = new Pool({
 });
 
 const regNumManager = RegNumManager(pool);
+const regNumListRoutes = RegNumListRoutes(regNumManager);
 
 app.use(session({
     secret: 'yikes',
@@ -49,25 +51,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(bodyParser.json());
 
-app.get('/', async function (req, res) {
-    // eslint-disable-next-line camelcase
-    let reg_num_list = await regNumManager.buildRegNumList();
-    res.render('index', {
-        reg_num_list
-    });
-});
+app.get('/', regNumListRoutes.index);
 
-app.post('/regdata', async function (req, res) {
-    let newReg = req.body.regFieldText;
-    await regNumManager.addReg(newReg);
-    req.flash('error', regNumManager.error());
-    res.redirect('/');
-});
+app.post('/regdata', regNumListRoutes.addNewReg);
 
-app.post('/clear', async function (req, res) {
-    await regNumManager.clearTable();
-    res.redirect('/');
-});
+app.post('/clear', regNumListRoutes.clear);
 
 const PORT = process.env.PORT || 3012;
 
