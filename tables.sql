@@ -6,5 +6,6 @@ create table towns(
 
 create table reg_num_list (
 	id serial not null primary key,
-    registration text not null
+    registration text not null,
+	town_id int not null 
 );

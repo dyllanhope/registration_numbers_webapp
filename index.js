@@ -19,7 +19,6 @@ if (process.env.DATABASE_URL && !local) {
 }
 // which db connection to use
 const connectionString = process.env.DATABASE_URL || 'postgresql://coder:pg123@localhost:5432/registration_nums';
-
 const pool = new Pool({
     connectionString,
     ssl: useSSL
@@ -48,14 +47,12 @@ app.set('view engine', 'handlebars');
 app.use(express.static('public'));
 
 app.use(bodyParser.urlencoded({ extended: false }));
-
 app.use(bodyParser.json());
 
 app.get('/', regNumListRoutes.index);
-
 app.post('/regdata', regNumListRoutes.addNewReg);
-
 app.post('/clear', regNumListRoutes.clear);
+app.post('/towns', regNumListRoutes.filter);
 
 const PORT = process.env.PORT || 3012;
 

@@ -15,7 +15,18 @@
                 <button type="submit" class="addBtn">Add registration number</button>
                 <h5 style="color:red; margin:0px">{{messages.error}}</h5>
             </form>
+            <form action="/towns" method="POST">
+                <select name="towns">
+                    {{#each townList}}
+                    <option value="{{town}}">{{town}} {{loc}}</option>
+                    {{/each}}
+                </select>
+                <button type="submit">Filter</button>
+            </form>
         </div>
+    </div>
+    <div class="row">
+        <div class="col-4"></div>
     </div>
     <div class="row">
         <div class="col-4"></div>
@@ -26,15 +37,6 @@
         </div>
         <div class="col-4"></div>
     </div>
-    {{!-- <div class="row">
-        <div class="col-4"></div>
-        <div class="col-4">
-            <select id="item1">
-                <option value="show all towns">show all towns</option>
-            </select>
-        </div>
-        <div class="col-4"></div>
-    </div> --}}
     <div class="row">
         <div class="col-3"></div>
         <div class="col-6 register">

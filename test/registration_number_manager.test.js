@@ -44,12 +44,75 @@ describe('Testing Registration number manager', function () {
 
             assert.strict.equal(regInstance.error(), 'This registration has been entered already');
         });
+        it('Should return "We do not track registrations from this town" when an unrecognised registration start (eg. CK) is entered', async function () {
+            let regInstance = RegNumberManager(pool);
+
+            await regInstance.addReg('ck 123-321');
+
+            assert.strict.equal(regInstance.error(), 'We do not track registrations from this town');
+        });
         it('Should return "" when the correct registration is entered', async function () {
             let regInstance = RegNumberManager(pool);
 
             await regInstance.addReg('ca 123-321');
 
             assert.strict.equal(regInstance.error(), '');
+        });
+    });
+    describe('Filter testing', function () {
+        it('Should return a filtered list of registrations from CA and leaving out the CY registration', async function () {
+            let regInstance = RegNumberManager(pool);
+            await regInstance.buildTownsTable();
+            await regInstance.addReg('ca 123-321');
+            await regInstance.addReg('cy 109-275');
+            await regInstance.addReg('ca 432-352');
+
+            regInstance.loadFilterItem('Cape Town');
+
+            let regTest = await regInstance.buildRegNumList();
+            assert.strict.deepEqual(regTest, [{ registration: 'CA 123 321' }, { registration: 'CA 432 352' }]);
+        });
+        it('Should return a filtered list of registrations from CY and leaving out the CA registrations', async function () {
+            let regInstance = RegNumberManager(pool);
+            await regInstance.buildTownsTable();
+            await regInstance.addReg('ca 123-321');
+            await regInstance.addReg('cy 109-275');
+            await regInstance.addReg('ca 432-352');
+
+            regInstance.loadFilterItem('Bellville');
+
+            let regTest = await regInstance.buildRegNumList();
+            assert.strict.deepEqual(regTest, [{ registration: 'CY 109 275' }]);
+        });
+        it('Should return all the added registrations when "show all towns" is chosen', async function () {
+            let regInstance = RegNumberManager(pool);
+            await regInstance.buildTownsTable();
+            await regInstance.addReg('ca 123-321');
+            await regInstance.addReg('cy 109-275');
+            await regInstance.addReg('ca 432-352');
+
+            regInstance.loadFilterItem('show all towns');
+
+            let regTest = await regInstance.buildRegNumList();
+            assert.strict.deepEqual(regTest, [
+                { registration: 'CA 123 321' },
+                { registration: 'CY 109 275' },
+                { registration: 'CA 432 352' }
+            ]);
+        });
+        it('Should return all the added registrations by default when no town is picked', async function () {
+            let regInstance = RegNumberManager(pool);
+            await regInstance.buildTownsTable();
+            await regInstance.addReg('ca 123-321');
+            await regInstance.addReg('cy 109-275');
+            await regInstance.addReg('ca 432-352');
+
+            let regTest = await regInstance.buildRegNumList();
+            assert.strict.deepEqual(regTest, [
+                { registration: 'CA 123 321' },
+                { registration: 'CY 109 275' },
+                { registration: 'CA 432 352' }
+            ]);
         });
     });
     describe('Table clearing testing', function () {
@@ -63,130 +126,22 @@ describe('Testing Registration number manager', function () {
             assert.strict.deepEqual(regTest.rows, undefined);
         });
     });
+    describe('Drop down build list testing', function () {
+        it('Should return the list of towns to load into a table and build drop down from', async function () {
+            let regInstance = RegNumberManager(pool);
+
+            assert.strict.deepEqual(regInstance.showTowns(), [
+                { town: 'show all towns', loc: '' },
+                { town: 'Ceres', loc: 'CT' },
+                { town: 'Paarl', loc: 'CJ' },
+                { town: 'Cape Town', loc: 'CA' },
+                { town: 'Stellenbosch', loc: 'CL' },
+                { town: 'Bellville', loc: 'CY' }
+            ]);
+        });
+    });
 
     after(function () {
         pool.end();
     });
 });
-// const assert = require('assert');
-// const RegNumberManager = require('../registration_number_manager');
-
-// describe('List testing', function () {
-//     it('Should return an object with all 5 of the registered plates', function () {
-//         var townInstance = RegNumberManager();
-//         townInstance.register('CY 13245');
-//         townInstance.register('CT 51263');
-//         townInstance.register('CL 72534');
-//         townInstance.register('CA 99153');
-//         townInstance.register('CY 01152');
-
-//         assert.strict.deepEqual(townInstance.regList(), { 'CY 13245': 0, 'CT 51263': 0, 'CL 72534': 0, 'CA 99153': 0, 'CY 01152': 0 });
-//     });
-//     it('Should return an object with 5 registrations as the others are of invalid formats', function () {
-//         var townInstance = RegNumberManager();
-//         townInstance.register('CY 13245');
-//         townInstance.register('CT 51263');
-//         townInstance.register('CL 72534');
-//         townInstance.register('CA 99153');
-//         townInstance.register('CY 01152');
-//         // invalid formats
-//         townInstance.register('CP 01152'); // wrong town
-//         townInstance.register('CY01152'); // no space between first 2 and last 5 chars
-//         townInstance.register('CY 011 5243'); // too many chars
-//         townInstance.register('CY 01152'); // repeat of a previous registration
-
-//         assert.strict.deepEqual(townInstance.regList(), { 'CY 13245': 0, 'CT 51263': 0, 'CL 72534': 0, 'CA 99153': 0, 'CY 01152': 0 });
-//     });
-//     it('Should return an empty object with undefined input', function () {
-//         var townInstance = RegNumberManager();
-//         townInstance.register();
-//         assert.strict.deepEqual(townInstance.regList(), {});
-//     });
-// });
-// describe('Filter testing', function () {
-//     it('Should return an array of 5 registrations with undefined parameter', function () {
-//         var townInstance = RegNumberManager();
-//         townInstance.register('CY 13245');
-//         townInstance.register('CT 51263');
-//         townInstance.register('CL 72534');
-//         townInstance.register('CA 99153');
-//         townInstance.register('CY 01152');
-
-//         assert.strict.deepEqual(townInstance.filter(), ['CY 13245', 'CT 51263', 'CL 72534', 'CA 99153', 'CY 01152']);
-//     });
-//     it('Should return an array of the 2 registrations from Bellville', function () {
-//         var townInstance = RegNumberManager();
-//         townInstance.register('CY 13245');
-//         townInstance.register('CT 51263');
-//         townInstance.register('CL 72534');
-//         townInstance.register('CA 99153');
-//         townInstance.register('CY 01152');
-
-//         assert.strict.deepEqual(townInstance.filter('Bellville'), ['CY 13245', 'CY 01152']);
-//     });
-//     it('Should return an empty array with the filter checking for registration that is not present', function () {
-//         var townInstance = RegNumberManager();
-//         townInstance.register('CY 13245');
-//         townInstance.register('CT 51263');
-//         townInstance.register('CL 72534');
-//         townInstance.register('CA 99153');
-//         townInstance.register('CY 01152');
-
-//         assert.strict.deepEqual(townInstance.filter('Paarl'), []);
-//     });
-//     it('Should return an array with all the items registered with an undefined filter', function () {
-//         var townInstance = RegNumberManager();
-//         townInstance.register('CY 13245');
-//         townInstance.register('CT 51263');
-//         townInstance.register('CL 72534');
-//         townInstance.register('CA 99153');
-//         townInstance.register('CY 01152');
-
-//         assert.strict.deepEqual(townInstance.filter(), ['CY 13245', 'CT 51263', 'CL 72534', 'CA 99153', 'CY 01152']);
-//     });
-// });
-// describe('Error checking testing', function () {
-//     it('Should return "valid" as all specifications are met', function () {
-//         var townInstance = RegNumberManager();
-//         townInstance.register('CY 13245');
-
-//         assert.strict.equal(townInstance.validity(), 'valid');
-//     });
-//     it('Should return "invalid" as either 1 or more specifications are not met (including undefined inputs)', function () {
-//         var townInstance = RegNumberManager();
-//         townInstance.register();
-
-//         assert.strict.equal(townInstance.validity(), 'invalid');
-//     });
-//     it('Should return error message for an undefined input', function () {
-//         var townInstance = RegNumberManager();
-//         townInstance.register();
-
-//         assert.strict.equal(townInstance.errorText(), '*Please enter your registration');
-//     });
-//     it('Should return error message for registration from a different town', function () {
-//         var townInstance = RegNumberManager();
-//         townInstance.register('CP 13245');
-
-//         assert.strict.equal(townInstance.errorText(), '*We do not keep track of registrations from that town');
-//     });
-//     it('Should return error message for registration that contains either too many or too little characters', function () {
-//         var townInstance = RegNumberManager();
-//         townInstance.register('CY 132 4523');
-
-//         assert.strict.equal(townInstance.errorText(), '*Please enter the registration in a valid format');
-//     });
-//     it('Should return error message for registration that does not contain a space between the first 2 and last 5 chars', function () {
-//         var townInstance = RegNumberManager();
-//         townInstance.register('CY313245');
-
-//         assert.strict.equal(townInstance.errorText(), '*Please make sure there is a space after the first 2 characters');
-//     });
-//     it('Should return error message for registration that has already been entered', function () {
-//         var townInstance = RegNumberManager();
-//         townInstance.register('CY 13245');
-//         townInstance.register('CY 13245');
-
-//         assert.strict.equal(townInstance.errorText(), '*This registration has been entered already');
-//     });
-// });
