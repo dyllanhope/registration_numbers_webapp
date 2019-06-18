@@ -4,7 +4,7 @@ const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
 const flash = require('express-flash');
 const session = require('express-session');
-const RegNumManager = require('./registration_number_manager');
+const RegNumManager = require('./registration-number-manager');
 const RegNumListRoutes = require('./routes/reg-num-list-routes');
 
 const app = express();

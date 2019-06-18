@@ -2,7 +2,7 @@
 'use strict';
 
 const assert = require('assert');
-const RegNumberManager = require('../registration_number_manager');
+const RegNumberManager = require('../registration-number-manager');
 const pg = require('pg');
 const Pool = pg.Pool;
 
