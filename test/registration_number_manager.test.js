@@ -23,7 +23,7 @@ describe('Testing Registration number manager', function () {
         // clean the tables before each test run
         await pool.query('delete from reg_num_list;');
     });
-    describe('Error message testing', function () {
+    describe('Error messages testing', function () {
         it('Should return "Please enter a registration" when no registration is entered', async function () {
             let regInstance = RegNumberManager(pool);
 
