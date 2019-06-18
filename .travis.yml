@@ -1,7 +1,7 @@
 language: node_js
 
 env:
-  - DATABASE_URL=postgresql://postgres@localhost:5433/reg_num_tests
+  - DATABASE_URL=postgresql://postgres@localhost:5432/reg_num_tests
 
 node_js:
   - "v9.11.2"
