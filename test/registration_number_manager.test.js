@@ -6,7 +6,7 @@ const RegNumberManager = require('../registration_number_manager');
 const pg = require('pg');
 const Pool = pg.Pool;
 
-const connectionString = process.env.DATABASE_URL || 'postgresql://coder:pg123@localhost:5432/reg_testing';
+const connectionString = process.env.DATABASE_URL || 'postgresql://coder:pg123@localhost:5433/reg_testing';
 
 let useSSL = false;
 let local = process.env.LOCAL || false;
