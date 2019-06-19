@@ -18,7 +18,10 @@ module.exports = function (pool) {
         newReg = (input).toUpperCase();
         let regFormat = /^[A-Z]{2}\s[0-9\s-]{1,7}$/;
         let formatTest = regFormat.test(newReg);
+
+        // checking if a hyphen is present and removing it for consistency
         let temp = newReg.slice(0, 6) + ' ' + newReg.slice(7, 10);
+
         if (newReg) {
             if (formatTest) {
                 let regScan = await pool.query('SELECT registration FROM reg_num_list WHERE registration = $1', [temp]);
